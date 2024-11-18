@@ -63,3 +63,7 @@ function update($table,$set,$where)
     $pdo=$pdo=pdo(DBNAME);
     return $pdo->exec($sql); 
 }
+function save($table,$array)
+{
+    if(isset())
+}
