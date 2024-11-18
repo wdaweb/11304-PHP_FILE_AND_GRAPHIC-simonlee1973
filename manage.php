@@ -16,16 +16,70 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>檔案管理功能</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        table{
+            width:500px;
+            margin:20px auto;
+        }
+        td{
+            padding:5px;
+        }
+    </style>
 </head>
 <body>
 <h1 class="header">檔案管理練習</h1>
 <!----建立上傳檔案表單及相關的檔案資訊存入資料表機制----->
+<?php
 
+    include_once"function.php";
+    //echo $_POST['name'];
+    echo "<br>";
+    dd($_FILES);
 
+    if(isset($_FILES['filename']))
+    if($_FILES['filename']['error']==0)
+    {
 
+        $filename=time() .$_FILES['filename']['name'];
+        move_uploaded_file($_FILES['filename']['tmp_name'],"./files/".$filename);
 
+        $desc=$_POST['desc'];
+        insert ("imgs","(filename,`desc`)","('$filename','$desc')");
+        
+    }
+    else
+    {
+        echo "上傳失敗請檢查檔案格式和大小是否符合規格";
+    }
+    $dirpath="./files";
+    $items=scandir($dirpath);
+    $items=array_diff($items,array('.','..'));
+    dd($items);
+
+  
+
+?>
 
 <!----透過資料表來顯示檔案的資訊，並可對檔案執行更新或刪除的工作----->
+<?php
+
+
+    $rows=all('imgs');
+    echo "<table>";
+    foreach($rows as $file)
+    {
+        echo "<tr>";
+        echo "<td><img src='files/{$file['filename']}'></td>";
+        echo "<td>{$file['desc']}</td>";
+        echo "<td><a href='del_img.php?id={$file['id']}'>刪除</a></td>";
+        echo "<td><a href='re_upload.php?id={$file['id']}'>重新上傳</a></td>";
+        echo "</tr>";
+
+    }
+
+    echo "</table>";    
+?>
+
 
 
 
